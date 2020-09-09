@@ -27,7 +27,7 @@ function dibujarEnvases() {
   const container = document.getElementById("playfield")
   container.innerHTML = ""
   objetos.forEach(objeto => {
-    const controles = document.createElement("DIV");
+    const controles = document.createElement("div");
     controles.classList = "envase d-flex flex text-center justify-content-between p-1 m-1 my-md-4 border"
     controles.innerHTML = `
     <div class="col-9 d-flex flex-column text-center justify-content-between p-1 m-1 "> 
@@ -61,11 +61,10 @@ function dibujarEnvases() {
       </div>
       </div>      
       `;
-    const envase = document.createElement("PROGRESS");
+    const envase = document.createElement("progress");
     envase.setAttribute("id", objeto.nombre)
     envase.setAttribute("value", objeto.capacidadTotal - objeto.capacidadLibre);
     envase.setAttribute("max", objeto.capacidadTotal);
-    // envase.setAttribute("style", `width:${objeto.capacidadTotal /4}px;`) //VERIFICAR EN EL CSS
     envase.classList = "mx-auto"
     controles.insertBefore(envase, controles.childNodes[0]);
     container.appendChild(controles);
@@ -77,7 +76,7 @@ function cargarDropdown(objeto) {
   const dropdown = document.querySelector(`#trasvasar${objeto.nombre}`)
   objetos.forEach(e => {
     if (e.nombre != objeto.nombre) {
-      const option = document.createElement("OPTION");
+      const option = document.createElement("option");
       option.innerText=e.nombre
       option.setAttribute("value", e.nombre)
       dropdown.appendChild(option)       

@@ -25,7 +25,7 @@ vaso = {
         if (this.capacidadLibre >= cantidad) {
             this.capacidadLibre = this.capacidadLibre - cantidad
         } else {
-            return `No hay capacidad libre suficiente para contener esa cantidad.\nSi agregamos ${cantidad} ml teniendo ${this.capacidadLibre} ml libres van a sobrar ${(this.capacidadTotal - cantidad) * -1} ml`
+            alert(`No hay capacidad libre suficiente en ${this.nombre} para contener esa cantidad.\nSi agregamos ${cantidad} ml teniendo ${this.capacidadLibre} ml libres van a sobrar ${(this.capacidadLibre - cantidad) * -1} ml`)
         }
     },
     descargar: function (cant) {
@@ -40,11 +40,11 @@ vaso = {
     getCapacidadTotal: function () {
         return this.capacidadTotal + " ml"
     },
-    trasvasar : function (otroEnvase, cantidad) {
+    trasvasar: function (otroEnvase, cantidad) {
         // Como el value del dropdown es un string, tengo que buscar dentro
-        // del objeto window un objeto con el nombre que coincida con ese string.
-        if (this.capacidadTotal - this.capacidadLibre < cantidad) { return "No hay suficiente líquido para trasvasar" }
-        else if (window[otroEnvase].capacidadLibre <= cantidad) { return `No hay capacidad libre suficiente en el otro envase` }
+        // del objeto window (la ventana del navegador) un objeto con el nombre que coincida con ese string.
+        if (this.capacidadTotal - this.capacidadLibre < cantidad) { alert("No hay suficiente líquido para trasvasar") }
+        else if (window[otroEnvase].capacidadLibre < cantidad) { alert(`No hay capacidad libre suficiente en ${window[otroEnvase].nombre}.\nSi agregamos ${cantidad} ml teniendo ${window[otroEnvase].capacidadLibre} ml libres van a sobrar ${(window[otroEnvase].capacidadLibre - cantidad) * -1} ml.\nSeleccione otro envase, o trasvase menos líquido.`) }
         else {
             this.descargar(cantidad);
             window[otroEnvase].cargar(cantidad);
@@ -60,10 +60,11 @@ objetos.push(vaso)
 // declaramos los argumentos que pasarán a ser los valores de las propiedades inicializadas.
 
 function Envase(nombre, capacidadTotal) {
-    // Propiedades.
-    this.nombre = nombre
-    this.capacidadTotal = capacidadTotal;
-    this.capacidadLibre = capacidadTotal;
+    //Propiedades
+    this.nombre = nombre;
+    this.capacidadTotal = parseInt(capacidadTotal);
+    this.capacidadLibre = parseInt(capacidadTotal);
+
     // Métodos.
     this.vaciar = function () {
         this.capacidadLibre = this.capacidadTotal;
@@ -73,19 +74,19 @@ function Envase(nombre, capacidadTotal) {
     }
     this.cargar = function (cant) {
         cantidad = parseInt(cant)
-
         if (this.capacidadLibre >= cantidad) {
-
             this.capacidadLibre = this.capacidadLibre - cantidad
         } else {
-            return `No hay capacidad libre suficiente para contener esa cantidad.\nSi agregamos ${cantidad} ml teniendo ${this.capacidadLibre} ml libres van a sobrar ${(this.capacidadTotal - cantidad) * -1} ml`
+            alert(`No hay capacidad libre suficiente en ${this.nombre} para contener esa cantidad.\nSi agregamos ${cantidad} ml teniendo ${this.capacidadLibre} ml libres van a sobrar ${(this.capacidadLibre - cantidad) * -1} ml`)
         }
     }
     this.descargar = function (cant) {
         cantidad = parseInt(cant);
-        (this.capacidadLibre + parseInt(cant) <= this.capacidadTotal) ?
-            this.capacidadLibre = this.capacidadLibre + cantidad
-            : this.capacidadLibre = this.capacidadTotal
+        if (cantidad <= this.capacidadTotal - this.capacidadLibre) {
+            this.capacidadLibre += cantidad;
+        } else {
+            alert("No se puede descargar tanto.")
+        }
     }
     this.getCapacidadLibre = function () {
         return this.capacidadLibre + " ml"
@@ -95,8 +96,12 @@ function Envase(nombre, capacidadTotal) {
     }
     // Creamos un método para interactuar con otros objetos.
     this.trasvasar = function (otroEnvase, cantidad) {
-        if (this.capacidadTotal - this.capacidadLibre < cantidad) { return "No hay suficiente líquido para trasvasar" }
-        else if (window[otroEnvase].capacidadLibre < cantidad) { return `No hay capacidad libre suficiente en el otro envase` }
+        
+        //¿Tengo suficiente cantidad de líquido?
+        if (this.capacidadTotal - this.capacidadLibre < cantidad) { alert("No hay suficiente líquido para trasvasar") }
+
+        //¿El otro envase tiene suficiente capacidad libre?
+        else if (window[otroEnvase].capacidadLibre < cantidad) { alert(`No hay capacidad libre suficiente en ${window[otroEnvase].nombre}.\nSi agregamos ${cantidad} ml teniendo ${window[otroEnvase].capacidadLibre} ml libres van a sobrar ${(window[otroEnvase].capacidadLibre - cantidad) * -1} ml.\nSeleccione otro envase, o trasvase menos líquido.`) }
         else {
             this.descargar(cantidad);
             window[otroEnvase].cargar(cantidad);
@@ -109,4 +114,4 @@ function Envase(nombre, capacidadTotal) {
 taza = new Envase("taza", 300)
 pinta = new Envase("pinta", 480)
 botella = new Envase("botella", 1000)
-objetos.push(botella,taza,pinta)
+objetos.push(botella, taza, pinta)
